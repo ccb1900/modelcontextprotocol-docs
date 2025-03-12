@@ -7,6 +7,11 @@
     "light": "#FAFAFA",
     "dark": "#09090b"
   },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-0D3FGBKS4M"
+    }
+  },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
