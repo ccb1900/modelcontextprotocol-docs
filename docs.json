@@ -77,27 +77,37 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Python SDK",
+          "anchor": "Python SDK（官方）",
           "href": "https://github.com/modelcontextprotocol/python-sdk",
           "icon": "python"
         },
         {
-          "anchor": "TypeScript SDK",
+          "anchor": "TypeScript SDK（官方）",
           "href": "https://github.com/modelcontextprotocol/typescript-sdk",
           "icon": "square-js"
         },
         {
-          "anchor": "Java SDK",
+          "anchor": "Java SDK（官方）",
           "href": "https://github.com/modelcontextprotocol/java-sdk",
           "icon": "java"
         },
         {
-          "anchor": "Kotlin SDK",
+          "anchor": "Kotlin SDK（官方）",
           "href": "https://github.com/modelcontextprotocol/kotlin-sdk",
           "icon": "square-k"
         },
         {
-          "anchor": "Specification",
+          "anchor": "Golang SDK（社区）",
+          "href": "https://github.com/mark3labs/mcp-go",
+          "icon": "golang"
+        },
+        {
+          "anchor": "Golang SDK（社区）",
+          "href": "https://github.com/metoro-io/mcp-golang",
+          "icon": "golang"
+        },
+        {
+          "anchor": "规范",
           "href": "https://spec.modelcontextprotocol.io",
           "icon": "book"
         }
