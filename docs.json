@@ -81,22 +81,20 @@
       {
         "tab": "文章",
         "icon": "book-open",
-        "global": {
-          "anchors": [
-            {
-              "anchor": "Python SDK",
-              "href": "https://github.com/modelcontextprotocol/python-sdk"
-            },
-            {
-              "anchor": "Java SDK",
-              "href": "https://github.com/modelcontextprotocol/java-sdk"
-            },
-            {
-              "anchor": "JavaScript SDK",
-              "href": "https://github.com/modelcontextprotocol/javascript-sdk"
-            }
-          ]
-        }
+        "anchors": [
+          {
+            "anchor": "Python SDK",
+            "href": "https://github.com/modelcontextprotocol/python-sdk"
+          },
+          {
+            "anchor": "Java SDK",
+            "href": "https://github.com/modelcontextprotocol/java-sdk"
+          },
+          {
+            "anchor": "JavaScript SDK",
+            "href": "https://github.com/modelcontextprotocol/javascript-sdk"
+          }
+        ]
       }
     ],
     "global": {
