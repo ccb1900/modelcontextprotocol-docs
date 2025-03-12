@@ -1,9 +1,9 @@
-# Model Context Protocol Documentation
+# 模型上下文协议文档
 
-The official documentation for the [Model Context Protocol](https://modelcontextprotocol.io).
+[模型上下文协议](https://modelcontextprotocol.io)的官方文档。
 
-For detailed contribution guidelines, development setup, and troubleshooting, please see our [Contributing Guide](CONTRIBUTING.md).
+有关详细的贡献指南、开发设置和故障排除，请参阅我们的[贡献指南](CONTRIBUTING.md)。
 
-### Publishing Changes
+### 发布更改
 
-Changes will be deployed to production automatically after pushing to the default branch.
+推送到默认分支的更改将自动部署到生产环境。
