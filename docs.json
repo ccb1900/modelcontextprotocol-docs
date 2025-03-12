@@ -11,14 +11,14 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
+        "tab": "文档",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "开始",
             "pages": [
               "introduction",
               {
-                "group": "Quickstart",
+                "group": "快速入门",
                 "pages": [
                   "quickstart/server",
                   "quickstart/client",
@@ -30,7 +30,7 @@
             ]
           },
           {
-            "group": "Tutorials",
+            "group": "教程",
             "pages": [
               "tutorials/building-mcp-with-llms",
               "docs/tools/debugging",
@@ -38,7 +38,7 @@
             ]
           },
           {
-            "group": "Concepts",
+            "group": "概念",
             "pages": [
               "docs/concepts/architecture",
               "docs/concepts/resources",
@@ -50,7 +50,7 @@
             ]
           },
           {
-            "group": "Development",
+            "group": "开发",
             "pages": [
               "development/updates",
               "development/roadmap",
