@@ -76,16 +76,22 @@
       {
         "tab": "文章",
         "icon": "book-open",
-        "groups": [
-          {
-            "group": "文章",
-            "pages": [
-              "https://github.com/modelcontextprotocol/python-sdk",
-              "https://github.com/modelcontextprotocol/python-sdk",
-              "https://github.com/modelcontextprotocol/python-sdk"
-            ]
-          }
-        ]
+        "global": {
+          "anchors": [
+            {
+              "anchor": "Python SDK",
+              "href": "https://github.com/modelcontextprotocol/python-sdk"
+            },
+            {
+              "anchor": "Java SDK",
+              "href": "https://github.com/modelcontextprotocol/java-sdk"
+            },
+            {
+              "anchor": "JavaScript SDK",
+              "href": "https://github.com/modelcontextprotocol/javascript-sdk"
+            }
+          ]
+        }
       }
     ],
     "global": {
