@@ -1,17 +1,17 @@
 ---
-title: "Transports"
-description: "Learn about MCP's communication mechanisms"
+title: "传输"
+description: "了解 MCP 的通信机制"
 ---
 
-Transports in the Model Context Protocol (MCP) provide the foundation for communication between clients and servers. A transport handles the underlying mechanics of how messages are sent and received.
+模型上下文协议（MCP）中的传输为客户端和服务器之间的通信提供了基础。传输负责处理消息发送和接收的底层机制。
 
-## Message Format
+## 消息格式
 
-MCP uses [JSON-RPC](https://www.jsonrpc.org/) 2.0 as its wire format. The transport layer is responsible for converting MCP protocol messages into JSON-RPC format for transmission and converting received JSON-RPC messages back into MCP protocol messages.
+MCP 使用 [JSON-RPC](https://www.jsonrpc.org/) 2.0 作为其传输格式。传输层负责将 MCP 协议消息转换为 JSON-RPC 格式进行传输，并将接收到的 JSON-RPC 消息转换回 MCP 协议消息。
 
-There are three types of JSON-RPC messages used:
+使用了三种类型的 JSON-RPC 消息：
 
-### Requests
+### 请求
 ```typescript
 {
   jsonrpc: "2.0",
@@ -21,7 +21,7 @@ There are three types of JSON-RPC messages used:
 }
 ```
 
-### Responses
+### 响应
 ```typescript
 {
   jsonrpc: "2.0",
@@ -35,7 +35,7 @@ There are three types of JSON-RPC messages used:
 }
 ```
 
-### Notifications
+### 通知
 ```typescript
 {
   jsonrpc: "2.0",
@@ -44,22 +44,22 @@ There are three types of JSON-RPC messages used:
 }
 ```
 
-## Built-in Transport Types
+## 内置传输类型
 
-MCP includes two standard transport implementations:
+MCP 包含两种标准传输实现：
 
-### Standard Input/Output (stdio)
+### 标准输入/输出（stdio）
 
-The stdio transport enables communication through standard input and output streams. This is particularly useful for local integrations and command-line tools.
+stdio 传输通过标准输入和输出流实现通信。这对于本地集成和命令行工具特别有用。
 
-Use stdio when:
-- Building command-line tools
-- Implementing local integrations
-- Needing simple process communication
-- Working with shell scripts
+使用 stdio 的场景：
+- 构建命令行工具
+- 实现本地集成
+- 需要简单的进程通信
+- 使用 shell 脚本
 
 <Tabs>
-  <Tab title="TypeScript (Server)">
+  <Tab title="TypeScript (服务器)">
     ```typescript
     const server = new Server({
       name: "example-server",
@@ -72,7 +72,7 @@ Use stdio when:
     await server.connect(transport);
     ```
   </Tab>
-  <Tab title="TypeScript (Client)">
+  <Tab title="TypeScript (客户端)">
     ```typescript
     const client = new Client({
       name: "example-client",
@@ -88,7 +88,7 @@ Use stdio when:
     await client.connect(transport);
     ```
   </Tab>
-  <Tab title="Python (Server)">
+  <Tab title="Python (服务器)">
     ```python
     app = Server("example-server")
 
@@ -100,7 +100,7 @@ Use stdio when:
         )
     ```
   </Tab>
-  <Tab title="Python (Client)">
+  <Tab title="Python (客户端)">
     ```python
     params = StdioServerParameters(
         command="./server",
@@ -114,17 +114,17 @@ Use stdio when:
   </Tab>
 </Tabs>
 
-### Server-Sent Events (SSE)
+### 服务器发送事件（SSE）
 
-SSE transport enables server-to-client streaming with HTTP POST requests for client-to-server communication.
+SSE 传输通过 HTTP POST 请求实现服务器到客户端的流式通信。
 
-Use SSE when:
-- Only server-to-client streaming is needed
-- Working with restricted networks
-- Implementing simple updates
+使用 SSE 的场景：
+- 仅需要服务器到客户端的流式通信
+- 在受限网络中工作
+- 实现简单的更新
 
 <Tabs>
-  <Tab title="TypeScript (Server)">
+  <Tab title="TypeScript (服务器)">
     ```typescript
     import express from "express";
     
@@ -153,7 +153,7 @@ Use SSE when:
     app.listen(3000);
     ```
   </Tab>
-  <Tab title="TypeScript (Client)">
+  <Tab title="TypeScript (客户端)">
     ```typescript
     const client = new Client({
       name: "example-client",
@@ -168,7 +168,7 @@ Use SSE when:
     await client.connect(transport);
     ```
   </Tab>
-  <Tab title="Python (Server)">
+  <Tab title="Python (服务器)">
     ```python
     from mcp.server.sse import SseServerTransport
     from starlette.applications import Starlette
@@ -192,7 +192,7 @@ Use SSE when:
     )
     ```
   </Tab>
-  <Tab title="Python (Client)">
+  <Tab title="Python (客户端)">
     ```python
     async with sse_client("http://localhost:8000/sse") as streams:
         async with ClientSession(streams[0], streams[1]) as session:
@@ -201,30 +201,30 @@ Use SSE when:
   </Tab>
 </Tabs>
 
-## Custom Transports
+## 自定义传输
 
-MCP makes it easy to implement custom transports for specific needs. Any transport implementation just needs to conform to the Transport interface:
+MCP 使得为特定需求实现自定义传输变得容易。任何传输实现只需符合传输接口即可：
 
-You can implement custom transports for:
-- Custom network protocols
-- Specialized communication channels
-- Integration with existing systems
-- Performance optimization
+您可以实现自定义传输的场景：
+- 自定义网络协议
+- 专用通信通道
+- 与现有系统集成
+- 性能优化
 
 <Tabs>
   <Tab title="TypeScript">
     ```typescript
     interface Transport {
-      // Start processing messages
+      // 开始处理消息
       start(): Promise<void>;
 
-      // Send a JSON-RPC message
+      // 发送 JSON-RPC 消息
       send(message: JSONRPCMessage): Promise<void>;
 
-      // Close the connection
+      // 关闭连接
       close(): Promise<void>;
 
-      // Callbacks
+      // 回调
       onclose?: () => void;
       onerror?: (error: Error) => void;
       onmessage?: (message: JSONRPCMessage) => void;
@@ -232,8 +232,7 @@ You can implement custom transports for:
     ```
   </Tab>
   <Tab title="Python">
-    Note that while MCP Servers are often implemented with asyncio, we recommend
-    implementing low-level interfaces like transports with `anyio` for wider compatibility.
+    请注意，虽然 MCP 服务器通常使用 asyncio 实现，但我们建议使用 `anyio` 实现低级接口（如传输）以获得更广泛的兼容性。
     ```python
     @contextmanager
     async def create_transport(
@@ -241,26 +240,26 @@ You can implement custom transports for:
         write_stream: MemoryObjectSendStream[JSONRPCMessage]
     ):
         """
-        Transport interface for MCP.
+        MCP 的传输接口。
 
-        Args:
-            read_stream: Stream to read incoming messages from
-            write_stream: Stream to write outgoing messages to
+        参数:
+            read_stream: 用于读取传入消息的流
+            write_stream: 用于写入传出消息的流
         """
         async with anyio.create_task_group() as tg:
             try:
-                # Start processing messages
+                # 开始处理消息
                 tg.start_soon(lambda: process_messages(read_stream))
 
-                # Send messages
+                # 发送消息
                 async with write_stream:
                     yield write_stream
 
             except Exception as exc:
-                # Handle errors
+                # 处理错误
                 raise exc
             finally:
-                # Clean up
+                # 清理
                 tg.cancel_scope.cancel()
                 await write_stream.aclose()
                 await read_stream.aclose()
@@ -268,17 +267,17 @@ You can implement custom transports for:
   </Tab>
 </Tabs>
 
-## Error Handling
+## 错误处理
 
-Transport implementations should handle various error scenarios:
+传输实现应处理各种错误场景：
 
-1. Connection errors
-2. Message parsing errors
-3. Protocol errors
-4. Network timeouts
-5. Resource cleanup
+1. 连接错误
+2. 消息解析错误
+3. 协议错误
+4. 网络超时
+5. 资源清理
 
-Example error handling:
+错误处理示例：
 
 <Tabs>
   <Tab title="TypeScript">
@@ -286,18 +285,18 @@ Example error handling:
     class ExampleTransport implements Transport {
       async start() {
         try {
-          // Connection logic
+          // 连接逻辑
         } catch (error) {
-          this.onerror?.(new Error(`Failed to connect: ${error}`));
+          this.onerror?.(new Error(`连接失败: ${error}`));
           throw error;
         }
       }
 
       async send(message: JSONRPCMessage) {
         try {
-          // Sending logic
+          // 发送逻辑
         } catch (error) {
-          this.onerror?.(new Error(`Failed to send message: ${error}`));
+          this.onerror?.(new Error(`发送消息失败: ${error}`));
           throw error;
         }
       }
@@ -305,94 +304,93 @@ Example error handling:
     ```
   </Tab>
   <Tab title="Python">
-  Note that while MCP Servers are often implemented with asyncio, we recommend
-  implementing low-level interfaces like transports with `anyio` for wider compatibility.
+    请注意，虽然 MCP 服务器通常使用 asyncio 实现，但我们建议使用 `anyio` 实现低级接口（如传输）以获得更广泛的兼容性。
     ```python
     @contextmanager
     async def example_transport(scope: Scope, receive: Receive, send: Send):
         try:
-            # Create streams for bidirectional communication
+            # 创建用于双向通信的流
             read_stream_writer, read_stream = anyio.create_memory_object_stream(0)
             write_stream, write_stream_reader = anyio.create_memory_object_stream(0)
 
             async def message_handler():
                 try:
                     async with read_stream_writer:
-                        # Message handling logic
+                        # 消息处理逻辑
                         pass
                 except Exception as exc:
-                    logger.error(f"Failed to handle message: {exc}")
+                    logger.error(f"处理消息失败: {exc}")
                     raise exc
 
             async with anyio.create_task_group() as tg:
                 tg.start_soon(message_handler)
                 try:
-                    # Yield streams for communication
+                    # 生成用于通信的流
                     yield read_stream, write_stream
                 except Exception as exc:
-                    logger.error(f"Transport error: {exc}")
+                    logger.error(f"传输错误: {exc}")
                     raise exc
                 finally:
                     tg.cancel_scope.cancel()
                     await write_stream.aclose()
                     await read_stream.aclose()
         except Exception as exc:
-            logger.error(f"Failed to initialize transport: {exc}")
+            logger.error(f"初始化传输失败: {exc}")
             raise exc
     ```
   </Tab>
 </Tabs>
 
-## Best Practices
+## 最佳实践
 
-When implementing or using MCP transport:
+在实现或使用 MCP 传输时：
 
-1. Handle connection lifecycle properly
-2. Implement proper error handling
-3. Clean up resources on connection close
-4. Use appropriate timeouts
-5. Validate messages before sending
-6. Log transport events for debugging
-7. Implement reconnection logic when appropriate
-8. Handle backpressure in message queues
-9. Monitor connection health
-10. Implement proper security measures
+1. 正确处理连接生命周期
+2. 实现适当的错误处理
+3. 在连接关闭时清理资源
+4. 使用适当的超时
+5. 在发送前验证消息
+6. 记录传输事件以便调试
+7. 在适当的情况下实现重连逻辑
+8. 处理消息队列中的背压
+9. 监控连接健康状态
+10. 实施适当的安全措施
 
-## Security Considerations
+## 安全注意事项
 
-When implementing transport:
+在实现传输时：
 
-### Authentication and Authorization
-- Implement proper authentication mechanisms
-- Validate client credentials
-- Use secure token handling
-- Implement authorization checks
+### 认证与授权
+- 实施适当的认证机制
+- 验证客户端凭据
+- 使用安全的令牌处理
+- 实施授权检查
 
-### Data Security
-- Use TLS for network transport
-- Encrypt sensitive data
-- Validate message integrity
-- Implement message size limits
-- Sanitize input data
+### 数据安全
+- 使用 TLS 进行网络传输
+- 加密敏感数据
+- 验证消息完整性
+- 实施消息大小限制
+- 清理输入数据
 
-### Network Security
-- Implement rate limiting
-- Use appropriate timeouts
-- Handle denial of service scenarios
-- Monitor for unusual patterns
-- Implement proper firewall rules
+### 网络安全
+- 实施速率限制
+- 使用适当的超时
+- 处理拒绝服务场景
+- 监控异常模式
+- 实施适当的防火墙规则
 
-## Debugging Transport
+## 调试传输
 
-Tips for debugging transport issues:
+调试传输问题的技巧：
 
-1. Enable debug logging
-2. Monitor message flow
-3. Check connection states
-4. Validate message formats
-5. Test error scenarios
-6. Use network analysis tools
-7. Implement health checks
-8. Monitor resource usage
-9. Test edge cases
-10. Use proper error tracking
+1. 启用调试日志
+2. 监控消息流
+3. 检查连接状态
+4. 验证消息格式
+5. 测试错误场景
+6. 使用网络分析工具
+7. 实施健康检查
+8. 监控资源使用情况
+9. 测试边缘情况
+10. 使用适当的错误跟踪

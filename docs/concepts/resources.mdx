@@ -1,146 +1,146 @@
 ---
-title: "Resources"
-description: "Expose data and content from your servers to LLMs"
+title: "资源"
+description: "将服务器上的数据和内容暴露给LLM使用"
 ---
 
-Resources are a core primitive in the Model Context Protocol (MCP) that allow servers to expose data and content that can be read by clients and used as context for LLM interactions.
+资源是模型上下文协议（MCP）中的核心原语，允许服务器暴露数据和内容，客户端可以读取这些资源并将其用作LLM交互的上下文。
 
 <Note>
-  Resources are designed to be **application-controlled**, meaning that the client application can decide how and when they should be used.
-  Different MCP clients may handle resources differently. For example:
-  - Claude Desktop currently requires users to explicitly select resources before they can be used
-  - Other clients might automatically select resources based on heuristics
-  - Some implementations may even allow the AI model itself to determine which resources to use
+  资源设计为**应用程序控制**，意味着客户端应用程序可以决定如何以及何时使用它们。
+  不同的MCP客户端可能会以不同的方式处理资源。例如：
+  - Claude Desktop目前要求用户在使用资源之前明确选择资源
+  - 其他客户端可能会基于启发式自动选择资源
+  - 某些实现甚至可能允许AI模型本身决定使用哪些资源
 
-  Server authors should be prepared to handle any of these interaction patterns when implementing resource support. In order to expose data to models automatically, server authors should use a **model-controlled** primitive such as [Tools](./tools).
+  服务器作者在实现资源支持时应准备好处理这些交互模式。为了自动向模型暴露数据，服务器作者应使用**模型控制**的原语，例如[工具](./tools)。
 </Note>
 
-## Overview
+## 概述
 
-Resources represent any kind of data that an MCP server wants to make available to clients. This can include:
+资源代表MCP服务器希望向客户端提供的任何类型的数据。这可以包括：
 
-- File contents
-- Database records
-- API responses
-- Live system data
-- Screenshots and images
-- Log files
-- And more
+- 文件内容
+- 数据库记录
+- API响应
+- 实时系统数据
+- 截图和图像
+- 日志文件
+- 以及其他
 
-Each resource is identified by a unique URI and can contain either text or binary data.
+每个资源由唯一的URI标识，可以包含文本或二进制数据。
 
-## Resource URIs
+## 资源URI
 
-Resources are identified using URIs that follow this format:
+资源使用以下格式的URI进行标识：
 
 ```
-[protocol]://[host]/[path]
+[协议]://[主机]/[路径]
 ```
 
-For example:
+例如：
 - `file:///home/user/documents/report.pdf`
 - `postgres://database/customers/schema`
 - `screen://localhost/display1`
 
-The protocol and path structure is defined by the MCP server implementation. Servers can define their own custom URI schemes.
+协议和路径结构由MCP服务器实现定义。服务器可以定义自己的自定义URI方案。
 
-## Resource types
+## 资源类型
 
-Resources can contain two types of content:
+资源可以包含两种类型的内容：
 
-### Text resources
+### 文本资源
 
-Text resources contain UTF-8 encoded text data. These are suitable for:
-- Source code
-- Configuration files
-- Log files
-- JSON/XML data
-- Plain text
+文本资源包含UTF-8编码的文本数据。这些适用于：
+- 源代码
+- 配置文件
+- 日志文件
+- JSON/XML数据
+- 纯文本
 
-### Binary resources
+### 二进制资源
 
-Binary resources contain raw binary data encoded in base64. These are suitable for:
-- Images
-- PDFs
-- Audio files
-- Video files
-- Other non-text formats
+二进制资源包含base64编码的原始二进制数据。这些适用于：
+- 图像
+- PDF文件
+- 音频文件
+- 视频文件
+- 其他非文本格式
 
-## Resource discovery
+## 资源发现
 
-Clients can discover available resources through two main methods:
+客户端可以通过两种主要方法发现可用资源：
 
-### Direct resources
+### 直接资源
 
-Servers expose a list of concrete resources via the `resources/list` endpoint. Each resource includes:
-
-```typescript
-{
-  uri: string;           // Unique identifier for the resource
-  name: string;          // Human-readable name
-  description?: string;  // Optional description
-  mimeType?: string;     // Optional MIME type
-}
-```
-
-### Resource templates
-
-For dynamic resources, servers can expose [URI templates](https://datatracker.ietf.org/doc/html/rfc6570) that clients can use to construct valid resource URIs:
+服务器通过`resources/list`端点暴露具体资源列表。每个资源包括：
 
 ```typescript
 {
-  uriTemplate: string;   // URI template following RFC 6570
-  name: string;          // Human-readable name for this type
-  description?: string;  // Optional description
-  mimeType?: string;     // Optional MIME type for all matching resources
+  uri: string;           // 资源的唯一标识符
+  name: string;          // 人类可读的名称
+  description?: string;  // 可选描述
+  mimeType?: string;     // 可选的MIME类型
 }
 ```
 
-## Reading resources
+### 资源模板
 
-To read a resource, clients make a `resources/read` request with the resource URI.
+对于动态资源，服务器可以暴露[URI模板](https://datatracker.ietf.org/doc/html/rfc6570)，客户端可以使用这些模板构建有效的资源URI：
 
-The server responds with a list of resource contents:
+```typescript
+{
+  uriTemplate: string;   // 遵循RFC 6570的URI模板
+  name: string;          // 该类型的人类可读名称
+  description?: string;  // 可选描述
+  mimeType?: string;     // 所有匹配资源的可选MIME类型
+}
+```
+
+## 读取资源
+
+要读取资源，客户端使用资源URI发出`resources/read`请求。
+
+服务器响应包含资源内容列表：
 
 ```typescript
 {
   contents: [
     {
-      uri: string;        // The URI of the resource
-      mimeType?: string;  // Optional MIME type
+      uri: string;        // 资源的URI
+      mimeType?: string;  // 可选的MIME类型
 
-      // One of:
-      text?: string;      // For text resources
-      blob?: string;      // For binary resources (base64 encoded)
+      // 以下之一：
+      text?: string;      // 对于文本资源
+      blob?: string;      // 对于二进制资源（base64编码）
     }
   ]
 }
 ```
 
 <Tip>
-  Servers may return multiple resources in response to one `resources/read` request. This could be used, for example, to return a list of files inside a directory when the directory is read.
+  服务器可能会响应一个`resources/read`请求返回多个资源。例如，当读取目录时，可以返回目录中的文件列表。
 </Tip>
 
-## Resource updates
+## 资源更新
 
-MCP supports real-time updates for resources through two mechanisms:
+MCP通过两种机制支持资源的实时更新：
 
-### List changes
+### 列表更改
 
-Servers can notify clients when their list of available resources changes via the `notifications/resources/list_changed` notification.
+服务器可以通过`notifications/resources/list_changed`通知客户端可用资源列表的更改。
 
-### Content changes
+### 内容更改
 
-Clients can subscribe to updates for specific resources:
+客户端可以订阅特定资源的更新：
 
-1. Client sends `resources/subscribe` with resource URI
-2. Server sends `notifications/resources/updated` when the resource changes
-3. Client can fetch latest content with `resources/read`
-4. Client can unsubscribe with `resources/unsubscribe`
+1. 客户端发送`resources/subscribe`并附带资源URI
+2. 当资源更改时，服务器发送`notifications/resources/updated`
+3. 客户端可以使用`resources/read`获取最新内容
+4. 客户端可以使用`resources/unsubscribe`取消订阅
 
-## Example implementation
+## 示例实现
 
-Here's a simple example of implementing resource support in an MCP server:
+以下是一个在MCP服务器中实现资源支持的简单示例：
 
 <Tabs>
   <Tab title="TypeScript">
@@ -154,7 +154,7 @@ Here's a simple example of implementing resource support in an MCP server:
       }
     });
 
-    // List available resources
+    // 列出可用资源
     server.setRequestHandler(ListResourcesRequestSchema, async () => {
       return {
         resources: [
@@ -167,7 +167,7 @@ Here's a simple example of implementing resource support in an MCP server:
       };
     });
 
-    // Read resource contents
+    // 读取资源内容
     server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       const uri = request.params.uri;
 
@@ -210,7 +210,7 @@ Here's a simple example of implementing resource support in an MCP server:
 
         raise ValueError("Resource not found")
 
-    # Start server
+    # 启动服务器
     async with stdio_server() as streams:
         await app.run(
             streams[0],
@@ -221,32 +221,32 @@ Here's a simple example of implementing resource support in an MCP server:
   </Tab>
 </Tabs>
 
-## Best practices
+## 最佳实践
 
-When implementing resource support:
+在实现资源支持时：
 
-1. Use clear, descriptive resource names and URIs
-2. Include helpful descriptions to guide LLM understanding
-3. Set appropriate MIME types when known
-4. Implement resource templates for dynamic content
-5. Use subscriptions for frequently changing resources
-6. Handle errors gracefully with clear error messages
-7. Consider pagination for large resource lists
-8. Cache resource contents when appropriate
-9. Validate URIs before processing
-10. Document your custom URI schemes
+1. 使用清晰、描述性的资源名称和URI
+2. 包含有用的描述以指导LLM理解
+3. 在已知时设置适当的MIME类型
+4. 为动态内容实现资源模板
+5. 对频繁更改的资源使用订阅
+6. 使用清晰的错误消息优雅地处理错误
+7. 对于大型资源列表考虑分页
+8. 在适当时缓存资源内容
+9. 在处理之前验证URI
+10. 记录您的自定义URI方案
 
-## Security considerations
+## 安全考虑
 
-When exposing resources:
+在暴露资源时：
 
-- Validate all resource URIs
-- Implement appropriate access controls
-- Sanitize file paths to prevent directory traversal
-- Be cautious with binary data handling
-- Consider rate limiting for resource reads
-- Audit resource access
-- Encrypt sensitive data in transit
-- Validate MIME types
-- Implement timeouts for long-running reads
-- Handle resource cleanup appropriately
+- 验证所有资源URI
+- 实施适当的访问控制
+- 清理文件路径以防止目录遍历
+- 谨慎处理二进制数据
+- 考虑对资源读取进行速率限制
+- 审计资源访问
+- 加密传输中的敏感数据
+- 验证MIME类型
+- 对长时间运行的读取实施超时
+- 适当处理资源清理

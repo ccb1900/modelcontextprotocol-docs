@@ -1,79 +1,79 @@
 ---
-title: "Roots"
-description: "Understanding roots in MCP"
+title: "根目录"
+description: "理解MCP中的根目录"
 ---
 
-Roots are a concept in MCP that define the boundaries where servers can operate. They provide a way for clients to inform servers about relevant resources and their locations.
+根目录是MCP中的一个概念，用于定义服务器可以操作的边界。它们提供了一种方式，让客户端能够告知服务器相关资源及其位置。
 
-## What are Roots?
+## 什么是根目录？
 
-A root is a URI that a client suggests a server should focus on. When a client connects to a server, it declares which roots the server should work with. While primarily used for filesystem paths, roots can be any valid URI including HTTP URLs.
+根目录是客户端建议服务器应关注的URI。当客户端连接到服务器时，它会声明服务器应处理哪些根目录。虽然主要用于文件系统路径，但根目录可以是任何有效的URI，包括HTTP URL。
 
-For example, roots could be:
+例如，根目录可以是：
 
 ```
 file:///home/user/projects/myapp
 https://api.example.com/v1
 ```
 
-## Why Use Roots?
+## 为什么使用根目录？
 
-Roots serve several important purposes:
+根目录有以下几个重要用途：
 
-1. **Guidance**: They inform servers about relevant resources and locations
-2. **Clarity**: Roots make it clear which resources are part of your workspace
-3. **Organization**: Multiple roots let you work with different resources simultaneously
+1. **引导**：它们告知服务器相关资源及其位置
+2. **清晰性**：根目录明确了哪些资源属于你的工作空间
+3. **组织性**：多个根目录允许你同时处理不同的资源
 
-## How Roots Work
+## 根目录的工作原理
 
-When a client supports roots, it:
+当客户端支持根目录时，它会：
 
-1. Declares the `roots` capability during connection
-2. Provides a list of suggested roots to the server
-3. Notifies the server when roots change (if supported)
+1. 在连接期间声明`roots`能力
+2. 向服务器提供建议的根目录列表
+3. 在根目录发生变化时通知服务器（如果支持）
 
-While roots are informational and not strictly enforcing, servers should:
+虽然根目录是信息性的，并不强制执行，但服务器应：
 
-1. Respect the provided roots
-2. Use root URIs to locate and access resources
-3. Prioritize operations within root boundaries
+1. 尊重提供的根目录
+2. 使用根目录URI来定位和访问资源
+3. 优先在根目录边界内进行操作
 
-## Common Use Cases
+## 常见用例
 
-Roots are commonly used to define:
+根目录通常用于定义：
 
-- Project directories
-- Repository locations
-- API endpoints
-- Configuration locations
-- Resource boundaries
+- 项目目录
+- 仓库位置
+- API端点
+- 配置位置
+- 资源边界
 
-## Best Practices
+## 最佳实践
 
-When working with roots:
+在处理根目录时：
 
-1. Only suggest necessary resources
-2. Use clear, descriptive names for roots
-3. Monitor root accessibility
-4. Handle root changes gracefully
+1. 仅建议必要的资源
+2. 使用清晰、描述性的名称来命名根目录
+3. 监控根目录的可访问性
+4. 优雅地处理根目录的变化
 
-## Example
+## 示例
 
-Here's how a typical MCP client might expose roots:
+以下是一个典型的MCP客户端如何暴露根目录的示例：
 
 ```json
 {
   "roots": [
     {
       "uri": "file:///home/user/projects/frontend",
-      "name": "Frontend Repository"
+      "name": "前端仓库"
     },
     {
       "uri": "https://api.example.com/v1",
-      "name": "API Endpoint"
+      "name": "API端点"
     }
   ]
 }
 ```
 
-This configuration suggests the server focus on both a local repository and an API endpoint while keeping them logically separated.
+此配置建议服务器同时关注本地仓库和API端点，并在逻辑上保持它们的分离。
