@@ -12,7 +12,79 @@ Before starting, gather the necessary documentation to help Claude understand MC
 1. Visit https://modelcontextprotocol.io/llms-full.txt and copy the full documentation text
 2. Navigate to either the [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) or [Python SDK repository](https://github.com/modelcontextprotocol/python-sdk)
 3. Copy the README files and other relevant documentation
-4. Paste these documents into your conversation with Claude
+4. Paste these doc---
+title: "使用 LLM 构建 MCP"
+description: "使用 Claude 等 LLM 加速您的 MCP 开发！"
+---
+
+本指南将帮助您使用 LLM 来构建自定义的 Model Context Protocol (MCP) 服务器和客户端。本教程将重点介绍 Claude，但您可以使用任何前沿的 LLM 来完成此操作。
+
+## 准备文档
+
+在开始之前，收集必要的文档以帮助 Claude 理解 MCP：
+
+1. 访问 https://modelcontextprotocol.io/llms-full.txt 并复制完整的文档文本
+2. 导航到 [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) 或 [Python SDK 仓库](https://github.com/modelcontextprotocol/python-sdk)
+3. 复制 README 文件和其他相关文档
+4. 将这些文档粘贴到您与 Claude 的对话中
+
+## 描述您的服务器
+
+在提供文档后，请清晰地描述您要构建的服务器类型。具体说明：
+
+- 您的服务器将暴露哪些资源
+- 它将提供哪些工具
+- 它应该提供哪些提示
+- 它需要与哪些外部系统交互
+
+例如：
+```
+构建一个 MCP 服务器，该服务器：
+- 连接到公司 PostgreSQL 数据库
+- 将表模式暴露为资源
+- 提供运行只读 SQL 查询的工具
+- 包括常见数据分析任务的提示
+```
+
+## 与 Claude 合作
+
+在与 Claude 合作开发 MCP 服务器时：
+
+1. 首先从核心功能开始，然后逐步添加更多功能
+2. 请 Claude 解释您不理解的任何代码部分
+3. 根据需要请求修改或改进
+4. 让 Claude 帮助您测试服务器并处理边缘情况
+
+Claude 可以帮助实现所有关键的 MCP 功能：
+
+- 资源管理和暴露
+- 工具定义和实现
+- 提示模板和处理程序
+- 错误处理和日志记录
+- 连接和传输设置
+
+## 最佳实践
+
+在使用 Claude 构建 MCP 服务器时：
+
+- 将复杂的服务器分解为较小的部分
+- 在继续之前彻底测试每个组件
+- 牢记安全性 - 验证输入并适当限制访问
+- 为将来的维护记录好代码
+- 仔细遵循 MCP 协议规范
+
+## 后续步骤
+
+在 Claude 帮助您构建服务器后：
+
+1. 仔细审查生成的代码
+2. 使用 MCP Inspector 工具测试服务器
+3. 将其连接到 Claude.app 或其他 MCP 客户端
+4. 根据实际使用和反馈进行迭代
+
+请记住，Claude 可以帮助您根据需求的变化修改和改进您的服务器。
+
+需要更多指导？只需向 Claude 提出有关实现 MCP 功能或解决出现的问题的具体问题。uments into your conversation with Claude
 
 ## Describing your server
 
