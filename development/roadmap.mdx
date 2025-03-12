@@ -1,58 +1,58 @@
 ---
-title: Roadmap
-description: Our plans for evolving Model Context Protocol (H1 2025)
+title: 路线图
+description: 我们的 Model Context Protocol 发展计划（2025 年上半年）
 ---
 
-The Model Context Protocol is rapidly evolving. This page outlines our current thinking on key priorities and future direction for **the first half of 2025**, though these may change significantly as the project develops.
+Model Context Protocol 正在快速发展。本页概述了我们对 **2025 年上半年** 关键优先事项和未来方向的当前思考，尽管随着项目的发展，这些内容可能会发生重大变化。
 
-<Note>The ideas presented here are not commitments—we may solve these challenges differently than described, or some may not materialize at all. This is also not an _exhaustive_ list; we may incorporate work that isn't mentioned here.</Note>
+<Note>此处提出的想法并非承诺——我们可能会以不同于描述的方式解决这些挑战，或者某些挑战可能根本不会实现。这也不是一份**详尽**的清单；我们可能会纳入未在此提及的工作。</Note>
 
-We encourage community participation! Each section links to relevant discussions where you can learn more and contribute your thoughts.
+我们鼓励社区参与！每个部分都链接到相关讨论，您可以在其中了解更多信息并贡献您的想法。
 
-## Remote MCP Support
+## 远程 MCP 支持
 
-Our top priority is enabling [remote MCP connections](https://github.com/modelcontextprotocol/specification/discussions/102), allowing clients to securely connect to MCP servers over the internet. Key initiatives include:
+我们的首要任务是启用[远程 MCP 连接](https://github.com/modelcontextprotocol/specification/discussions/102)，允许客户端通过互联网安全地连接到 MCP 服务器。关键举措包括：
 
-- [**Authentication & Authorization**](https://github.com/modelcontextprotocol/specification/discussions/64): Adding standardized auth capabilities, particularly focused on OAuth 2.0 support.
+- [**认证与授权**](https://github.com/modelcontextprotocol/specification/discussions/64)：添加标准化的认证能力，特别是专注于 OAuth 2.0 支持。
 
-- [**Service Discovery**](https://github.com/modelcontextprotocol/specification/discussions/69): Defining how clients can discover and connect to remote MCP servers.
+- [**服务发现**](https://github.com/modelcontextprotocol/specification/discussions/69)：定义客户端如何发现并连接到远程 MCP 服务器。
 
-- [**Stateless Operations**](https://github.com/modelcontextprotocol/specification/discussions/102): Thinking about whether MCP could encompass serverless environments too, where they will need to be mostly stateless.
+- [**无状态操作**](https://github.com/modelcontextprotocol/specification/discussions/102)：思考 MCP 是否也可以涵盖无服务器环境，在这些环境中需要主要是无状态的。
 
-## Reference Implementations
+## 参考实现
 
-To help developers build with MCP, we want to offer documentation for:
+为了帮助开发者使用 MCP 进行构建，我们希望提供以下文档：
 
-- **Client Examples**: Comprehensive reference client implementation(s), demonstrating all protocol features
-- **Protocol Drafting**: Streamlined process for proposing and incorporating new protocol features
+- **客户端示例**：全面的参考客户端实现，展示所有协议功能。
+- **协议起草**：简化的新协议功能提议和纳入流程。
 
-## Distribution & Discovery
+## 分发与发现
 
-Looking ahead, we're exploring ways to make MCP servers more accessible. Some areas we may investigate include:
+展望未来，我们正在探索如何使 MCP 服务器更易于访问。我们可能会研究的一些领域包括：
 
-- **Package Management**: Standardized packaging format for MCP servers
-- **Installation Tools**: Simplified server installation across MCP clients
-- **Sandboxing**: Improved security through server isolation
-- **Server Registry**: A common directory for discovering available MCP servers
+- **包管理**：MCP 服务器的标准化打包格式。
+- **安装工具**：简化 MCP 客户端之间的服务器安装。
+- **沙盒化**：通过服务器隔离提高安全性。
+- **服务器注册表**：用于发现可用 MCP 服务器的公共目录。
 
-## Agent Support
+## 代理支持
 
-We're expanding MCP's capabilities for [complex agentic workflows](https://github.com/modelcontextprotocol/specification/discussions/111), particularly focusing on:
+我们正在扩展 MCP 的[复杂代理工作流](https://github.com/modelcontextprotocol/specification/discussions/111)能力，特别关注：
 
-- [**Hierarchical Agent Systems**](https://github.com/modelcontextprotocol/specification/discussions/94): Improved support for trees of agents through namespacing and topology awareness.
+- [**分层代理系统**](https://github.com/modelcontextprotocol/specification/discussions/94)：通过命名空间和拓扑感知改进对代理树的支持。
 
-- [**Interactive Workflows**](https://github.com/modelcontextprotocol/specification/issues/97): Better handling of user permissions and information requests across agent hierarchies, and ways to send output to users instead of models.
+- [**交互式工作流**](https://github.com/modelcontextprotocol/specification/issues/97)：更好地处理跨代理层次结构的用户权限和信息请求，以及将输出发送给用户而非模型的方式。
 
-- [**Streaming Results**](https://github.com/modelcontextprotocol/specification/issues/117): Real-time updates from long-running agent operations.
+- [**流式结果**](https://github.com/modelcontextprotocol/specification/issues/117)：从长时间运行的代理操作中获取实时更新。
 
-## Broader Ecosystem
+## 更广泛的生态系统
 
-We're also invested in:
+我们还致力于：
 
-- **Community-Led Standards Development**: Fostering a collaborative ecosystem where all AI providers can help shape MCP as an open standard through equal participation and shared governance, ensuring it meets the needs of diverse AI applications and use cases.
-- [**Additional Modalities**](https://github.com/modelcontextprotocol/specification/discussions/88): Expanding beyond text to support audio, video, and other formats.
-- [**Standardization**] Considering standardization through a standardization body.
+- **社区主导的标准开发**：培育一个协作生态系统，让所有 AI 提供商通过平等参与和共享治理来帮助塑造 MCP 作为开放标准，确保其满足多样化 AI 应用和用例的需求。
+- [**多模态支持**](https://github.com/modelcontextprotocol/specification/discussions/88)：超越文本，支持音频、视频和其他格式。
+- [**标准化**]：考虑通过标准化机构进行标准化。
 
-## Get Involved
+## 参与进来
 
-We welcome community participation in shaping MCP's future. Visit our [GitHub Discussions](https://github.com/orgs/modelcontextprotocol/discussions) to join the conversation and contribute your ideas.
+我们欢迎社区参与塑造 MCP 的未来。访问我们的 [GitHub Discussions](https://github.com/orgs/modelcontextprotocol/discussions) 加入对话并贡献您的想法。
