@@ -1,4 +1,4 @@
-# 模型上下文协议文档
+# MCP协议中文网
 
 [模型上下文协议](https://modelcontextprotocol.io)的官方文档。
 
@@ -7,3 +7,9 @@
 ### 发布更改
 
 推送到默认分支的更改将自动部署到生产环境。
+
+### 关于我
+
+<img src="/ext/ad/灯塔红白间.jpg" />
+
+<img src="/ext/ad/myact.jpg" />

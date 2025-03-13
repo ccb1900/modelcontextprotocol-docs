@@ -86,15 +86,17 @@
             ]
           },
           {
+            "tab": "关于我",
+            "icon": "mail",
+            "pages": [
+              "ext/me"
+            ]
+          },
+          {
             "tab": "扩展",
             "icon": "book-open",
-            "groups": [
-              {
-                "group": "扩展",
-                "pages": [
-                  "ext/article"
-                ]
-              }
+            "pages": [
+              "ext/article"
             ]
           }
         ]
@@ -160,7 +162,7 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/modelcontextprotocol"
+      "github": "https://github.com/ccb1900/modelcontextprotocol-docs"
     }
   },
   "redirects": [
