@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "willow",
-  "name": "模型上下文协议 ( Model Context Protocol ) (MCP)",
+  "name": "MCP,MCP协议，MCP 中文网，MCP协议中文网，模型上下文协议，模型上下文协议中文网",
   "colors": {
     "primary": "#09090b",
     "light": "#FAFAFA",
@@ -17,78 +17,84 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "文档",
-        "groups": [
+        "language": "zh",
+        "default": true,
+        "tabs": [
           {
-            "group": "开始",
-            "pages": [
-              "introduction",
+            "tab": "文档",
+            "groups": [
               {
-                "group": "快速入门",
+                "group": "开始",
                 "pages": [
-                  "quickstart/server",
-                  "quickstart/client",
-                  "quickstart/user"
+                  "introduction",
+                  {
+                    "group": "快速入门",
+                    "pages": [
+                      "quickstart/server",
+                      "quickstart/client",
+                      "quickstart/user"
+                    ]
+                  },
+                  "examples",
+                  "clients"
                 ]
               },
-              "examples",
-              "clients"
+              {
+                "group": "教程",
+                "pages": [
+                  "tutorials/building-mcp-with-llms",
+                  "docs/tools/debugging",
+                  "docs/tools/inspector"
+                ]
+              },
+              {
+                "group": "概念",
+                "pages": [
+                  "docs/concepts/architecture",
+                  "docs/concepts/resources",
+                  "docs/concepts/prompts",
+                  "docs/concepts/tools",
+                  "docs/concepts/sampling",
+                  "docs/concepts/roots",
+                  "docs/concepts/transports"
+                ]
+              },
+              {
+                "group": "开发",
+                "pages": [
+                  "development/updates",
+                  "development/roadmap",
+                  "development/contributing"
+                ]
+              }
             ]
           },
           {
-            "group": "教程",
-            "pages": [
-              "tutorials/building-mcp-with-llms",
-              "docs/tools/debugging",
-              "docs/tools/inspector"
+            "tab": "SDKs",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "Java",
+                "pages": [
+                  "sdk/java/mcp-overview",
+                  "sdk/java/mcp-client",
+                  "sdk/java/mcp-server"
+                ]
+              }
             ]
           },
           {
-            "group": "概念",
-            "pages": [
-              "docs/concepts/architecture",
-              "docs/concepts/resources",
-              "docs/concepts/prompts",
-              "docs/concepts/tools",
-              "docs/concepts/sampling",
-              "docs/concepts/roots",
-              "docs/concepts/transports"
-            ]
-          },
-          {
-            "group": "开发",
-            "pages": [
-              "development/updates",
-              "development/roadmap",
-              "development/contributing"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "SDKs",
-        "icon": "book-open",
-        "groups": [
-          {
-            "group": "Java",
-            "pages": [
-              "sdk/java/mcp-overview",
-              "sdk/java/mcp-client",
-              "sdk/java/mcp-server"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "扩展",
-        "icon": "book-open",
-        "groups": [
-          {
-            "group": "MCP",
-            "pages": [
-              "ext/article"
+            "tab": "扩展",
+            "icon": "book-open",
+            "groups": [
+              {
+                "group": "扩展",
+                "pages": [
+                  "ext/article"
+                ]
+              }
             ]
           }
         ]
