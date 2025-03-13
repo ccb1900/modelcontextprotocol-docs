@@ -10,6 +10,9 @@
   "integrations": {
     "ga4": {
       "measurementId": "G-0D3FGBKS4M"
+    },
+    "gtm": {
+      "tagId": "GTM-NRHWLWVK"
     }
   },
   "favicon": "/favicon.svg",
@@ -79,20 +82,14 @@
         ]
       },
       {
-        "tab": "文章",
+        "tab": "扩展",
         "icon": "book-open",
-        "anchors": [
+        "groups": [
           {
-            "anchor": "Python SDK",
-            "href": "https://github.com/modelcontextprotocol/python-sdk"
-          },
-          {
-            "anchor": "Java SDK",
-            "href": "https://github.com/modelcontextprotocol/java-sdk"
-          },
-          {
-            "anchor": "JavaScript SDK",
-            "href": "https://github.com/modelcontextprotocol/javascript-sdk"
+            "group": "MCP",
+            "pages": [
+              "ext/article"
+            ]
           }
         ]
       }
