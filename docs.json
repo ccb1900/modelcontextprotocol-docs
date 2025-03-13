@@ -156,6 +156,7 @@
   },
   "seo": {
     "metatags": {
+      "google-adsense-account": "ca-pub-1817374283725610",
       "og:image": "https://raw.githubusercontent.com/modelcontextprotocol/docs/2eb6171ddbfeefde349dc3b8d5e2b87414c26250/images/og-image.png"
     },
     "indexing": "navigable"
