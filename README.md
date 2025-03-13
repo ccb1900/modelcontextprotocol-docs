@@ -10,6 +10,6 @@
 
 ### 关于我
 
-<img src="/ext/ad/灯塔红白间.jpg" />
+<img src="/ext/ad/灯塔红白间.jpg" width="420" height="153" />
 
-<img src="/ext/ad/myact.jpg" />
+<img src="/ext/ad/myact.jpg" width="300" height="360" />
