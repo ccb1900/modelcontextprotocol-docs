@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev": "mintlify dev --port 4444"
+  },
+  "dependencies": {
+    "mintlify": "^4.0.433",
+    "sharp": "^0.33.5"
+  }
+}
