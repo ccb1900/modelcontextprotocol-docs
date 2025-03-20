@@ -964,7 +964,404 @@ MCP客户端支持额外的配置选项：
 这提供了类似的功能，但使用了基于WebFlux的SSE传输实现，推荐用于生产部署。
 
 </Tab>
+<Tab title="Kotlin">
 
+[您可以在此处找到本教程的完整代码。](https://github.com/modelcontextprotocol/kotlin-sdk/tree/main/samples/kotlin-mcp-client)
+
+## 系统要求
+
+在开始之前，请确保您的系统满足以下要求：
+- Java 17 或更高版本
+- Anthropic API 密钥（Claude）
+
+## 设置您的环境
+
+首先，如果您尚未安装 `java` 和 `gradle`，请先安装它们。
+您可以从 [Oracle 官方 JDK 网站](https://www.oracle.com/java/technologies/downloads/) 下载 `java`。
+验证您的 `java` 安装：
+```bash
+java --version
+```
+
+现在，让我们创建并设置您的项目：
+
+<CodeGroup>
+```bash MacOS/Linux
+# 为我们的项目创建一个新目录
+mkdir kotlin-mcp-client
+cd kotlin-mcp-client
+
+# 初始化一个新的 Kotlin 项目
+gradle init
+```
+
+```powershell Windows
+# 为我们的项目创建一个新目录
+md kotlin-mcp-client
+cd kotlin-mcp-client
+# 初始化一个新的 Kotlin 项目
+gradle init
+```
+</CodeGroup>
+
+运行 `gradle init` 后，您将看到创建项目的选项。
+选择 **Application** 作为项目类型，**Kotlin** 作为编程语言，**Java 17** 作为 Java 版本。
+
+或者，您可以使用 [IntelliJ IDEA 项目向导](https://kotlinlang.org/docs/jvm-get-started.html) 创建一个 Kotlin 应用程序。
+
+创建项目后，添加以下依赖项：
+
+<CodeGroup>
+```kotlin build.gradle.kts
+val mcpVersion = "0.3.0"
+val slf4jVersion = "2.0.9"
+val anthropicVersion = "0.8.0"
+
+dependencies {
+    implementation("io.modelcontextprotocol:kotlin-sdk:$mcpVersion")
+    implementation("org.slf4j:slf4j-nop:$slf4jVersion")
+    implementation("com.anthropic:anthropic-java:$anthropicVersion")
+}
+```
+
+```groovy build.gradle
+def mcpVersion = '0.3.0'
+def slf4jVersion = '2.0.9'
+def anthropicVersion = '0.8.0'
+dependencies {
+    implementation "io.modelcontextprotocol:kotlin-sdk:$mcpVersion"
+    implementation "org.slf4j:slf4j-nop:$slf4jVersion"
+    implementation "com.anthropic:anthropic-java:$anthropicVersion"
+}
+```
+</CodeGroup>
+
+此外，将以下插件添加到您的构建脚本中：
+<CodeGroup>
+```kotlin build.gradle.kts
+plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+```
+
+```groovy build.gradle
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+```
+</CodeGroup>
+
+## 设置您的 API 密钥
+
+您需要从 [Anthropic 控制台](https://console.anthropic.com/settings/keys) 获取 Anthropic API 密钥。
+
+设置您的 API 密钥：
+```bash
+export ANTHROPIC_API_KEY='您的 Anthropic API 密钥'
+```
+
+<Warning>
+请确保妥善保管您的 `ANTHROPIC_API_KEY`！
+</Warning>
+
+## 创建客户端
+
+### 基本客户端结构
+
+首先，让我们创建基本的客户端类：
+
+```kotlin
+class MCPClient : AutoCloseable {
+    private val anthropic = AnthropicOkHttpClient.fromEnv()
+    private val mcp: Client = Client(clientInfo = Implementation(name = "mcp-client-cli", version = "1.0.0"))
+    private lateinit var tools: List<ToolUnion>
+
+    // 方法将在此处定义
+
+    override fun close() {
+        runBlocking {
+            mcp.close()
+            anthropic.close()
+        }
+    }
+```
+
+### 服务器连接管理
+
+接下来，我们将实现连接到 MCP 服务器的方法：
+
+```kotlin
+suspend fun connectToServer(serverScriptPath: String) {
+    try {
+        val command = buildList {
+            when (serverScriptPath.substringAfterLast(".")) {
+                "js" -> add("node")
+                "py" -> add(if (System.getProperty("os.name").lowercase().contains("win")) "python" else "python3")
+                "jar" -> addAll(listOf("java", "-jar"))
+                else -> throw IllegalArgumentException("服务器脚本必须是 .js、.py 或 .jar 文件")
+            }
+            add(serverScriptPath)
+        }
+
+        val process = ProcessBuilder(command).start()
+        val transport = StdioClientTransport(
+            input = process.inputStream.asSource().buffered(),
+            output = process.outputStream.asSink().buffered()
+        )
+
+        mcp.connect(transport)
+
+        val toolsResult = mcp.listTools()
+        tools = toolsResult?.tools?.map { tool ->
+            ToolUnion.ofTool(
+                Tool.builder()
+                    .name(tool.name)
+                    .description(tool.description ?: "")
+                    .inputSchema(
+                        Tool.InputSchema.builder()
+                            .type(JsonValue.from(tool.inputSchema.type))
+                            .properties(tool.inputSchema.properties.toJsonValue())
+                            .putAdditionalProperty("required", JsonValue.from(tool.inputSchema.required))
+                            .build()
+                    )
+                    .build()
+            )
+        } ?: emptyList()
+        println("已连接到服务器，工具：${tools.joinToString(", ") { it.tool().get().name() }}")
+    } catch (e: Exception) {
+        println("连接到 MCP 服务器失败：$e")
+        throw e
+    }
+}
+```
+
+此外，创建一个辅助函数将 `JsonObject` 转换为 Anthropic 的 `JsonValue`：
+```kotlin
+private fun JsonObject.toJsonValue(): JsonValue {
+    val mapper = ObjectMapper()
+    val node = mapper.readTree(this.toString())
+    return JsonValue.fromJsonNode(node)
+}
+```
+
+### 查询处理逻辑
+
+现在让我们添加处理查询和处理工具调用的核心功能：
+
+```kotlin
+private val messageParamsBuilder: MessageCreateParams.Builder = MessageCreateParams.builder()
+    .model(Model.CLAUDE_3_5_SONNET_20241022)
+    .maxTokens(1024)
+
+suspend fun processQuery(query: String): String {
+    val messages = mutableListOf(
+        MessageParam.builder()
+            .role(MessageParam.Role.USER)
+            .content(query)
+            .build()
+    )
+
+    val response = anthropic.messages().create(
+        messageParamsBuilder
+            .messages(messages)
+            .tools(tools)
+            .build()
+    )
+
+    val finalText = mutableListOf<String>()
+    response.content().forEach { content ->
+        when {
+            content.isText() -> finalText.add(content.text().getOrNull()?.text() ?: "")
+
+            content.isToolUse() -> {
+                val toolName = content.toolUse().get().name()
+                val toolArgs =
+                    content.toolUse().get()._input().convert(object : TypeReference<Map<String, JsonValue>>() {})
+
+                val result = mcp.callTool(
+                    name = toolName,
+                    arguments = toolArgs ?: emptyMap()
+                )
+                finalText.add("[调用工具 $toolName，参数为 $toolArgs]")
+
+                messages.add(
+                    MessageParam.builder()
+                        .role(MessageParam.Role.USER)
+                        .content(
+                            """
+                                "type": "tool_result",
+                                "tool_name": $toolName,
+                                "result": ${result?.content?.joinToString("\n") { (it as TextContent).text ?: "" }}
+                            """.trimIndent()
+                        )
+                        .build()
+                )
+
+                val aiResponse = anthropic.messages().create(
+                    messageParamsBuilder
+                        .messages(messages)
+                        .build()
+                )
+
+                finalText.add(aiResponse.content().first().text().getOrNull()?.text() ?: "")
+            }
+        }
+    }
+
+    return finalText.joinToString("\n", prefix = "", postfix = "")
+}
+```
+
+### 交互式聊天
+
+我们将添加聊天循环：
+
+```kotlin
+suspend fun chatLoop() {
+    println("\nMCP 客户端已启动！")
+    println("输入您的查询或输入 'quit' 退出。")
+
+    while (true) {
+        print("\n查询：")
+        val message = readLine() ?: break
+        if (message.lowercase() == "quit") break
+        val response = processQuery(message)
+        println("\n$response")
+    }
+}
+```
+
+### 主入口点
+
+最后，我们将添加主执行函数：
+
+```kotlin
+fun main(args: Array<String>) = runBlocking {
+    if (args.isEmpty()) throw IllegalArgumentException("用法：java -jar <您的路径>/build/libs/kotlin-mcp-client-0.1.0-all.jar <服务器脚本路径>")
+    val serverPath = args.first()
+    val client = MCPClient()
+    client.use {
+        client.connectToServer(serverPath)
+        client.chatLoop()
+    }
+}
+```
+
+## 运行客户端
+
+要使用任何 MCP 服务器运行您的客户端：
+
+```bash
+./gradlew build
+
+# 运行客户端
+java -jar build/libs/<您的 jar 名称>.jar path/to/server.jar # jvm 服务器
+java -jar build/libs/<您的 jar 名称>.jar path/to/server.py # python 服务器
+java -jar build/libs/<您的 jar 名称>.jar path/to/build/index.js # node 服务器
+```
+
+<Note>
+如果您继续从服务器快速入门中的天气教程，您的命令可能类似于：`java -jar build/libs/kotlin-mcp-client-0.1.0-all.jar .../samples/weather-stdio-server/build/libs/weather-stdio-server-0.1.0-all.jar`
+</Note>
+
+**客户端将：**
+1. 连接到指定的服务器
+2. 列出可用工具
+3. 启动交互式聊天会话，您可以：
+   - 输入查询
+   - 查看工具执行
+   - 获取 Claude 的响应
+
+## 工作原理
+
+以下是高级工作流程示意图：
+
+```mermaid
+---
+config:
+    theme: neutral
+---
+sequenceDiagram
+    actor User
+    participant Client
+    participant Claude
+    participant MCP_Server as MCP Server
+    participant Tools
+
+    User->>Client: 发送查询
+    Client<<->>MCP_Server: 获取可用工具
+    Client->>Claude: 发送带有工具描述的查询
+    Claude-->>Client: 决定工具执行
+    Client->>MCP_Server: 请求工具执行
+    MCP_Server->>Tools: 执行所选工具
+    Tools-->>MCP_Server: 返回结果
+    MCP_Server-->>Client: 发送结果
+    Client->>Claude: 发送工具结果
+    Claude-->>Client: 提供最终响应
+    Client-->>User: 显示响应
+```
+
+当您提交查询时：
+1. 客户端从服务器获取可用工具列表
+2. 您的查询与工具描述一起发送到 Claude
+3. Claude 决定使用哪些工具（如果有）
+4. 客户端通过服务器执行请求的工具调用
+5. 结果被发送回 Claude
+6. Claude 提供自然语言响应
+7. 响应显示给您
+
+## 最佳实践
+
+1. **错误处理**
+   - 利用 Kotlin 的类型系统显式建模错误
+   - 在可能发生异常时，将外部工具和 API 调用包装在 `try-catch` 块中
+   - 提供清晰且有意义的错误消息
+   - 优雅地处理网络超时和连接问题
+
+2. **安全性**
+   - 将 API 密钥和秘密安全地存储在 `local.properties`、环境变量或秘密管理器中
+   - 验证所有外部响应，以避免意外或不安全的数据使用
+   - 在使用工具时谨慎处理权限和信任边界
+
+## 故障排除
+
+### 服务器路径问题
+- 仔细检查服务器脚本的路径是否正确
+- 如果相对路径不起作用，请使用绝对路径
+- 对于 Windows 用户，请确保在路径中使用正斜杠 (/) 或转义的反斜杠 (\)
+- 确保已安装所需的运行时（Java 需要 java，Node.js 需要 npm，Python 需要 uv）
+- 验证服务器文件具有正确的扩展名（Java 为 .jar，Node.js 为 .js，Python 为 .py）
+
+正确路径用法的示例：
+```bash
+# 相对路径
+java -jar build/libs/client.jar ./server/build/libs/server.jar
+
+# 绝对路径
+java -jar build/libs/client.jar /Users/username/projects/mcp-server/build/libs/server.jar
+
+# Windows 路径（两种格式均可）
+java -jar build/libs/client.jar C:/projects/mcp-server/build/libs/server.jar
+java -jar build/libs/client.jar C:\\projects\\mcp-server\\build\\libs\\server.jar
+```
+
+### 响应时间
+- 第一次响应可能需要长达 30 秒才能返回
+- 这是正常的，发生在以下情况时：
+  - 服务器初始化
+  - Claude 处理查询
+  - 工具正在执行
+- 后续响应通常更快
+- 在初始等待期间不要中断进程
+
+### 常见错误消息
+
+如果您看到：
+- `Connection refused`：确保服务器正在运行且路径正确
+- `Tool execution failed`：验证工具的所需环境变量是否已设置
+- `ANTHROPIC_API_KEY is not set`：检查您的环境变量
+
+</Tab>
 </Tabs>
 ## 下一步
 
